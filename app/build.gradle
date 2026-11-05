@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-def generatedAppName = System.getenv("APK_APP_NAME") ?: "HTML приложение"
+def generatedAppName = project.findProperty("appName") ?: "HTML приложение"
 
 android {
     namespace 'com.pixelstorm.htmlviewer'
