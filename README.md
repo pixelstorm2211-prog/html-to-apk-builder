@@ -12,7 +12,7 @@ The browser UI is in `web/index.html`; its secure API proxy is in `worker/index.
 2. Create a Cloudflare Worker named `html-to-apk-builder-api`; paste `worker/index.js` into its editor and deploy.
 3. In Worker Settings → Variables and Secrets, add secret `GITHUB_TOKEN` with the token from step 1.
 4. Add plain-text variable `ALLOWED_ORIGIN` with the exact Pages origin, e.g. `https://pixelstorm2211-prog.github.io`.
-5. In GitHub Settings → Pages, choose Deploy from a branch, branch `main`, folder `/web`, and save.
+5. In GitHub Settings → Pages, choose Deploy from a branch, branch `main`, folder `/(root)`, and save.
 6. Open the published Pages site, paste your Worker URL in the API field, and paste your HTML.
 
 ### Use
