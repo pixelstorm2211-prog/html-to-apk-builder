@@ -1,21 +1,26 @@
 # HTML to APK Builder
 
-This repository packages a supplied HTML page inside an Android WebView app and builds an installable **debug APK** using GitHub Actions.
+HTML is packaged inside an Android WebView app and built as a debug APK using GitHub Actions.
 
-## Build an APK
+## One-button web builder
 
-1. Open the **Actions** tab in this repository.
-2. Select **Build Android APK**.
-3. Click **Run workflow**.
-4. Enter the app name and paste the complete HTML source into **html_content** (up to 65,000 characters).
-5. Start the workflow and wait for it to finish.
-6. Open the completed run, find **Artifacts**, and download **html-android-apk**. Unzip it to get `app-debug.apk`.
+The browser UI is in `web/index.html`; its secure API proxy is in `worker/index.js`. The GitHub token must remain only in Cloudflare Worker Secrets.
 
-The APK is debug-signed by the Android Gradle Plugin and can be installed for testing. Android may ask you to allow installation from the browser or file manager. This is not a Play Store release; a production release needs a private signing key and release configuration.
+### One-time setup
 
-## Notes
+1. Create a **fine-grained personal access token** in GitHub, restricted to this repository only. Grant **Actions: Read and write** and **Metadata: Read-only**. Do not share the token or put it in website code.
+2. Create a Cloudflare Worker named `html-to-apk-builder-api`; paste `worker/index.js` into its editor and deploy.
+3. In Worker Settings → Variables and Secrets, add secret `GITHUB_TOKEN` with the token from step 1.
+4. Add plain-text variable `ALLOWED_ORIGIN` with the exact Pages origin, e.g. `https://pixelstorm2211-prog.github.io`.
+5. In GitHub Settings → Pages, choose Deploy from a branch, branch `main`, folder `/web`, and save.
+6. Open the published Pages site, paste your Worker URL in the API field, and paste your HTML.
 
-- The app displays the supplied page locally in Android WebView.
-- JavaScript and DOM storage are enabled.
-- Remote resources need an internet connection.
-- The workflow runs only when manually started. It does not expose a public build server or store GitHub credentials in a web page.
+### Use
+
+Click **СОЗДАТЬ APK**. The page triggers GitHub Actions, checks the build, and downloads the APK ZIP when ready. Unzip it to get `app-debug.apk`.
+
+The APK is debug-signed for testing, not a Play Store release. Artifacts are retained for 14 days. HTML is passed as a workflow input and may appear in workflow metadata; do not include secrets or private data.
+
+### Security
+
+Keep `GITHUB_TOKEN` only in Cloudflare Worker Secrets. Never add it to `web/index.html`, query strings, or repository files. Configure Cloudflare rate limiting for the Worker; CORS is not authentication. Limit the token to this repository and the permissions above.
